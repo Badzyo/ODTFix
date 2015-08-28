@@ -14,6 +14,7 @@
 		8016B4E91B89AA850051CEA7 /* odtFixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8016B4E81B89AA850051CEA7 /* odtFixTests.swift */; };
 		80ACBE201B8F838600A1E5DC /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE1F1B8F838600A1E5DC /* FileManager.swift */; };
 		80ACBE261B8FA20000A1E5DC /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */; };
+		80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D875251B9110B8005D4DE0 /* HelpViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		8016B4E81B89AA850051CEA7 /* odtFixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = odtFixTests.swift; sourceTree = "<group>"; };
 		80ACBE1F1B8F838600A1E5DC /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
+		80D875251B9110B8005D4DE0 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 				8016B4D71B89AA850051CEA7 /* ViewController.swift */,
 				80ACBE1F1B8F838600A1E5DC /* FileManager.swift */,
 				80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */,
+				80D875251B9110B8005D4DE0 /* HelpViewController.swift */,
 				8016B4D91B89AA850051CEA7 /* Images.xcassets */,
 				8016B4DB1B89AA850051CEA7 /* Main.storyboard */,
 				8016B4D31B89AA850051CEA7 /* Supporting Files */,
@@ -218,6 +221,7 @@
 				80ACBE261B8FA20000A1E5DC /* ErrorHandler.swift in Sources */,
 				8016B4D81B89AA850051CEA7 /* ViewController.swift in Sources */,
 				8016B4D61B89AA850051CEA7 /* AppDelegate.swift in Sources */,
+				80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

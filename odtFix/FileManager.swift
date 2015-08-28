@@ -33,11 +33,12 @@ protocol FileManagerLogDelegate {
 class FileManager: NSObject {
     
     static let sharedManager = FileManager()
-    var tempDir = NSURL(fileURLWithPath: "/private/tmp/odtFix", isDirectory: true)!
+    let tempDir = NSURL(fileURLWithPath: "/private/tmp/odtFix", isDirectory: true)!
     var delegate: FileManagerLogDelegate?
     
     let zipPath = "/usr/bin/zip"
     let unzipPath = "/usr/bin/unzip"
+    let newFileSuffix = "_fix"
     
     private func _launchTaskAt(path: String, args arguments: [String], handler: (error: ErrorCode, log: NSMutableAttributedString) -> Void) {
         var task = NSTask()
@@ -84,14 +85,17 @@ class FileManager: NSObject {
     }
     
     
-    func archiveDocsForURLs(URLs: [NSURL]) -> ErrorCode {
+    func archiveDocsForURLs(URLs: [NSURL], rewrite: Bool) -> ErrorCode {
+        
+        let suffix = rewrite ? "" : newFileSuffix
         
         for file in URLs {
             
             if let tmpURL = NSURL(fileURLWithPath: "\(tempDir.path!)/\(file.lastPathComponent!)", isDirectory: true) {
                 
                 NSFileManager.defaultManager().changeCurrentDirectoryPath("\(tempDir.path!)/\(file.lastPathComponent!)")
-                let newFileName = file.lastPathComponent!.stringByReplacingOccurrencesOfString(".odt", withString: "_fix.odt")
+                
+                let newFileName = file.lastPathComponent!.stringByReplacingOccurrencesOfString(".odt", withString: "\(suffix).odt")
                 let destinationPath = file.path!.stringByReplacingOccurrencesOfString(file.lastPathComponent!, withString: newFileName)
                 
                 println("Archiving \(tempDir.path!)/\(file.lastPathComponent!) to \(destinationPath)")
