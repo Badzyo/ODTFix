@@ -33,7 +33,7 @@ protocol FileManagerLogDelegate {
 class FileManager: NSObject {
     
     static let sharedManager = FileManager()
-    
+    var tempDir = NSURL(fileURLWithPath: "/private/tmp/odtFix", isDirectory: true)!
     var delegate: FileManagerLogDelegate?
     
     let zipPath = "/usr/bin/zip"
@@ -61,12 +61,15 @@ class FileManager: NSObject {
     
     func unarchiveDocsFromURLs(URLs: [NSURL]) -> ErrorCode {
         
+        NSFileManager.defaultManager().createDirectoryAtPath(tempDir.path!, withIntermediateDirectories: false, attributes: nil, error: nil)
+        NSFileManager.defaultManager().changeCurrentDirectoryPath(tempDir.path!)
+        
+        println("Creating folder \(tempDir.path!)")
+        
         for file in URLs {
-            println("Creating folder /private/tmp/\(file.lastPathComponent!)")
-            println("Unzip \(file.path!) to /private/tmp/\(file.lastPathComponent!)")
-            NSFileManager.defaultManager().createDirectoryAtPath("/private/tmp/\(file.lastPathComponent!)", withIntermediateDirectories: false, attributes: nil, error: nil)
-            NSFileManager.defaultManager().changeCurrentDirectoryPath("/tmp/\(file.lastPathComponent!)")
-            
+ 
+            println("Unzip \(file.path!) to \(tempDir.path!)/\(file.lastPathComponent!)")
+
             self._launchTaskAt(unzipPath, args: [file.path!, "-d", file.lastPathComponent!], handler: { (error: ErrorCode, log: NSMutableAttributedString) -> Void in
                 ErrorHandler.defaultHandler.printError(error)
                 if let textView = self.delegate?.textView.documentView as? NSTextView{
@@ -84,27 +87,31 @@ class FileManager: NSObject {
     func archiveDocsForURLs(URLs: [NSURL]) -> ErrorCode {
         
         for file in URLs {
-           
-            NSFileManager.defaultManager().changeCurrentDirectoryPath("/tmp/\(file.lastPathComponent!)")
-            let newFileName = file.lastPathComponent!.stringByReplacingOccurrencesOfString(".odt", withString: "_fix.odt")
-            let destinationPath = file.path!.stringByReplacingOccurrencesOfString(file.lastPathComponent!, withString: newFileName)
-            println("Archiving /private/tmp/\(file.lastPathComponent!) to \(destinationPath)")
-            self._launchTaskAt(zipPath, args: ["-r", "-X", destinationPath, "."], handler: { (error: ErrorCode, log: NSMutableAttributedString) -> Void in
-                ErrorHandler.defaultHandler.printError(error)
-                if let textView = self.delegate?.textView.documentView as? NSTextView{
-                    textView.textStorage?.appendAttributedString(log)
-                }
-            })
             
-            removeObjectAtPath(file)
+            if let tmpURL = NSURL(fileURLWithPath: "\(tempDir.path!)/\(file.lastPathComponent!)", isDirectory: true) {
+                
+                NSFileManager.defaultManager().changeCurrentDirectoryPath("\(tempDir.path!)/\(file.lastPathComponent!)")
+                let newFileName = file.lastPathComponent!.stringByReplacingOccurrencesOfString(".odt", withString: "_fix.odt")
+                let destinationPath = file.path!.stringByReplacingOccurrencesOfString(file.lastPathComponent!, withString: newFileName)
+                
+                println("Archiving \(tempDir.path!)/\(file.lastPathComponent!) to \(destinationPath)")
+                
+                self._launchTaskAt(zipPath, args: ["-r", "-X", destinationPath, "."], handler: { (error: ErrorCode, log: NSMutableAttributedString) -> Void in
+                    ErrorHandler.defaultHandler.printError(error)
+                    if let textView = self.delegate?.textView.documentView as? NSTextView{
+                        textView.textStorage?.appendAttributedString(log)
+                    }
+                })
             
+            }
         }
         
+        removeTempDir(tempDir)
         return .OK
     }
     
     // NOTE: Доработать!!!
-    func removeObjectAtPath(path: NSURL) -> ErrorCode {
+    func removeTempDir(path: NSURL) -> ErrorCode {
         
         NSFileManager.defaultManager().removeItemAtPath(path.path!, error: nil)
         return .OK
