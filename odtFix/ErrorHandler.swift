@@ -8,11 +8,12 @@
 
 import Foundation
 
+//Types of Errors
 enum ErrorCode: String {
     case OK = "OK"
     case TmpDirUnreachable = "TmpDirUnreachable"
     case ZipNotIstalled = "ZipNotIstalled"
-    case TempFileDissapeard = "TempFileDissapeard"
+    case TempFileDissapeared = "TempFileDissapeared"
 }
 
 class ErrorHandler: NSObject {

@@ -151,14 +151,14 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView editable="NO" importsGraphics="NO" findStyle="panel" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" smartInsertDelete="YES" id="anL-4d-lKR">
-                                            <rect key="frame" x="0.0" y="0.0" width="223" height="198"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="223" height="396"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <size key="minSize" width="741" height="396"/>
-                                            <size key="maxSize" width="745" height="10000000"/>
+                                            <size key="maxSize" width="760" height="10000000"/>
                                             <color key="insertionPointColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                             <size key="minSize" width="741" height="396"/>
-                                            <size key="maxSize" width="745" height="10000000"/>
+                                            <size key="maxSize" width="760" height="10000000"/>
                                         </textView>
                                     </subviews>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -249,7 +249,7 @@
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hfn-Xa-BVm">
                                 <rect key="frame" x="233" y="526" width="185" height="24"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0" id="Tas-Y3-v3W">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="0 из 0" id="Tas-Y3-v3W">
                                     <font key="font" metaFont="system" size="20"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -304,26 +304,34 @@
             <objects>
                 <viewController storyboardIdentifier="HelpController" id="cnV-Qd-AfZ" customClass="HelpViewController" customModule="odtFix" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="x4u-TG-DTJ">
-                        <rect key="frame" x="0.0" y="0.0" width="250" height="150"/>
+                        <rect key="frame" x="0.0" y="0.0" width="212" height="115"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eli-sW-yF3">
-                                <rect key="frame" x="6" y="8" width="238" height="135"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Help Help Help Help Help Help" id="dKv-e8-o1I">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X1r-Cp-Qfz">
+                                <rect key="frame" x="0.0" y="0.0" width="212" height="115"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" drawsBackground="YES" id="L38-Ah-BSZ">
                                     <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="0.16" colorSpace="calibratedRGB"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5EA-0A-Ohi">
+                                <rect key="frame" x="5" y="7" width="204" height="102"/>
+                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="justified" title="Help Text" allowsEditingTextAttributes="YES" id="lJa-be-8vY">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                         </subviews>
                     </view>
                     <connections>
-                        <outlet property="textField" destination="Eli-sW-yF3" id="1b9-iW-U0p"/>
+                        <outlet property="helpTextLabel" destination="5EA-0A-Ohi" id="CVM-eU-cQV"/>
                     </connections>
                 </viewController>
                 <customObject id="LEC-qh-Ylx" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="974" y="744"/>
+            <point key="canvasLocation" x="651" y="570.5"/>
         </scene>
     </scenes>
 </document>

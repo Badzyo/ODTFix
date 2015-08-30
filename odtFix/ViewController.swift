@@ -11,11 +11,13 @@ import AppKit
 
 class ViewController: NSViewController, FileManagerLogDelegate {
     
+    // File processing modes
     enum Modes {
         case FixOnly
         case FixAndReplace
     }
     
+    //States of UI object
     enum States {
         case ON
         case OFF
@@ -41,7 +43,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     
     @IBOutlet weak var resaveButton: NSButton!
     
-    
+    ///////////////////////////////////////////////////
+    //// ACTION:  Changed work mode by checking a radiobutton
+    ///////////////////////////////////////////////////
     @IBAction func modeChanged(sender: NSMatrix) {
         let radioRow = sender.selectedRow
         
@@ -54,6 +58,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         }
     }
     
+    ///////////////////////////////////////////////////
+    //// ACTION:  Changed "rewrite" checkbox state
+    ///////////////////////////////////////////////////
     @IBAction func rewriteModeChanged(sender: NSButton) {
         if sender.state == 0 {
             rewriteFiles = false
@@ -62,7 +69,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         }
     }
     
-    
+    ///////////////////////////////////////////////////
+    //// ACTION:  "Select files" button pressed
+    ///////////////////////////////////////////////////
     @IBAction func openFiles(sender: NSButton) {
         
         FileManager.sharedManager.delegate = self
@@ -83,6 +92,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         
     }
     
+    ///////////////////////////////////////////////////
+    //// ACTION:  "Process files" button pressed
+    ///////////////////////////////////////////////////
     @IBAction func fixXML(sender: NSButton) {
         
         FileManager.sharedManager.delegate = self
@@ -96,6 +108,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
             }
     }
     
+    ///////////////////////////////////////////////////
+    //// FUNCTION:  Change state of textFields at UI
+    ///////////////////////////////////////////////////
     private func _replacementTextFieldsChangeState (state: States) {
         if state == .ON {
             findTextField.enabled = true
@@ -109,17 +124,25 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
+        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
+        FileManager.sharedManager.addObserver(self, forKeyPath: "textReplacementsCounter", options: .New, context: nil)
 
-
-        // Do any additional setup after loading the view.
     }
+    
 
-    override var representedObject: AnyObject? {
-        didSet {
-        // Update the view, if already loaded.
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>) {
+        if let theObject = object as? FileManager {
+            switch keyPath {
+            case "xmlErrorsCounter", "xmlErrorsFixed":
+                errorsCountLabel.stringValue = "\(theObject.xmlErrorsFixed) из \(theObject.xmlErrorsCounter)"
+            case "textReplacementsCounter":
+                replacesCountLabel.stringValue = "\(theObject.textReplacementsCounter)"
+            default: ()
+            }
         }
     }
 
-
+   
 }
 

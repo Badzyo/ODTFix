@@ -15,6 +15,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
+        FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
+        
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
