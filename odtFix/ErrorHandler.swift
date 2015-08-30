@@ -14,6 +14,7 @@ enum ErrorCode: String {
     case TmpDirUnreachable = "TmpDirUnreachable"
     case ZipNotIstalled = "ZipNotIstalled"
     case TempFileDissapeared = "TempFileDissapeared"
+    case BadFileSelected = "Неподдерживаемый формат файла"
 }
 
 class ErrorHandler: NSObject {

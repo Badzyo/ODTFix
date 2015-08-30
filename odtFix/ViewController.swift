@@ -23,11 +23,16 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         case OFF
     }
 
+    let manager = FileManager.sharedManager
+    
     var fileURLs: [NSURL]?
     
     var mode: Modes = .FixOnly
     
     var rewriteFiles = false
+    
+    let RedColor = NSColor(red: 1, green: 0, blue: 0, alpha: 0.25)
+    let WhiteColor = NSColor(red: 1, green: 1, blue: 1, alpha: 1)
 
     @IBOutlet weak var textView: NSScrollView!
 
@@ -74,11 +79,10 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     ///////////////////////////////////////////////////
     @IBAction func openFiles(sender: NSButton) {
         
-        FileManager.sharedManager.delegate = self
         if let files = NSOpenPanel().selectFiles {
             if !(files.isEmpty) {
                 fileURLs = files
-                FileManager.sharedManager.unarchiveDocsFromURLs(fileURLs!)
+                manager.unarchiveDocsFromURLs(fileURLs!)
             } else {
                             println("file selection was canceled")
             }
@@ -97,15 +101,40 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     ///////////////////////////////////////////////////
     @IBAction func fixXML(sender: NSButton) {
         
-        FileManager.sharedManager.delegate = self
-            if let fileURLs = self.fileURLs {
-                if !(fileURLs.isEmpty) {
-                    FileManager.sharedManager.archiveDocsForURLs(fileURLs, rewrite: rewriteFiles)
-                }
-                
-            } else {
-                println("file selection was canceled")
+        if mode == .FixAndReplace && !_isEnteredTextForReplace() {
+            writeToLog("🚫 Не введены строки для поиска и замены")
+            if count(replaceTextField.stringValue) == 0 {
+                replaceTextField.backgroundColor = RedColor
             }
+            if count(findTextField.stringValue) == 0 {
+                findTextField.backgroundColor = RedColor
+            }
+            
+            
+        } else {
+            replaceTextField.backgroundColor = WhiteColor
+            findTextField.backgroundColor = WhiteColor
+            resaveButton.enabled = false
+            
+            if let fileURLs = self.fileURLs {
+
+                if !(fileURLs.isEmpty) {
+                    if mode == .FixAndReplace {
+                        manager.searchAndReplaceMode = true
+                        manager.searchString = findTextField.stringValue
+                        manager.replaceString = replaceTextField.stringValue
+                    }
+                    
+                    manager.archiveDocsForURLs(fileURLs, rewrite: rewriteFiles)
+                }
+
+            } else {
+                println("file not selected")
+            }
+        }
+        
+
+        
     }
     
     ///////////////////////////////////////////////////
@@ -121,12 +150,36 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         }
     }
     
+    ///////////////////////////////////////////////////
+    //// FUNCTION:  Check entered strings for
+    ////            search and replace
+    ///////////////////////////////////////////////////
+    private func _isEnteredTextForReplace() -> Bool {
+        
+        if count(findTextField.stringValue) == 0 || count(replaceTextField.stringValue) == 0 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    /////////////////////////////////////////////////////
+    //// FUNCTION:  add some String to textView
+    /////////////////////////////////////////////////////
+    func writeToLog(log: String) {
+        if let textView = self.textView.documentView as? NSTextView{
+            let logText = NSMutableAttributedString(string: "\(log)\n")
+            textView.textStorage?.appendAttributedString(logText)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
-        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
-        FileManager.sharedManager.addObserver(self, forKeyPath: "textReplacementsCounter", options: .New, context: nil)
+    
+        manager.delegate = self
+        manager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
+        manager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
+        manager.addObserver(self, forKeyPath: "textReplacementsCounter", options: .New, context: nil)
 
     }
     

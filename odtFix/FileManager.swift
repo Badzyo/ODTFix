@@ -47,11 +47,16 @@ class FileManager: NSObject {
     dynamic var xmlErrorsFixed: UInt = 0
     dynamic var textReplacementsCounter: UInt = 0
     
+    var searchAndReplaceMode = false
+    var searchString: String?
+    var replaceString: String?
+    
     ///////////////////////////////////////////////////
     //// FUNCTION:  lounches a task, defined by 
     ////            path and arguments
     ///////////////////////////////////////////////////
     private func _launchTaskAt(path: String, args arguments: [String], handler: (error: ErrorCode, log: String) -> Void) {
+        var result = ErrorCode.OK
         var task = NSTask()
         let pipe = NSPipe()
         let errorsPipe = NSPipe()
@@ -64,12 +69,18 @@ class FileManager: NSObject {
         task.waitUntilExit()
         
         
+        
         let data = errorsPipe.fileHandleForReading.readDataToEndOfFile()
         let output: String = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
         let error: ErrorCode = .OK
-        let currentLog = NSMutableAttributedString(string: "\(output)\n\(error.rawValue)\n")
-        println(currentLog)
-        handler(error: .OK, log: output)
+        
+        if count(output) > 0 {
+            if count(output.componentsSeparatedByString("cannot find zipfile directory")) > 1 {
+                result = .BadFileSelected
+            }
+        }
+        
+        handler(error: result, log: output)
     }
     
     ///////////////////////////////////////////////////
@@ -78,7 +89,12 @@ class FileManager: NSObject {
     ////            for possible XML errors
     ///////////////////////////////////////////////////
     func unarchiveDocsFromURLs(URLs: [NSURL]) -> ErrorCode {
+        removeTempDir(tempDir)
+        xmlErrorsFixed = 0
+        xmlErrorsCounter = 0
+        textReplacementsCounter = 0
         
+        var result = ErrorCode.OK
         NSFileManager.defaultManager().createDirectoryAtPath(tempDir.path!, withIntermediateDirectories: false, attributes: nil, error: nil)
         NSFileManager.defaultManager().changeCurrentDirectoryPath(tempDir.path!)
         
@@ -89,27 +105,37 @@ class FileManager: NSObject {
             println("Unzip \(file.path!) to \(tempDir.path!)/\(file.lastPathComponent!)")
 
             self._launchTaskAt(unzipPath, args: [file.path!, "-d", file.lastPathComponent!], handler: { (error: ErrorCode, log: String) -> Void in
-                ErrorHandler.defaultHandler.printError(error)
-                self.writeToLog(log)
-                self.writeToLog(error.rawValue)
+                if error == .OK {
+                    self.writeToLog("✅ SELECT file: \(file.path!)")
+                } else {
+                    self.writeToLog("🚫 \(error.rawValue): \(file.path!)")
+                }
+                result = error
             })
 
             xmlErrorsCounter += searchForXMLErrorsAt(NSURL(fileURLWithPath: "\(tempDir.path!)/\(file.lastPathComponent!)/content.xml")!)
         }
         
-        return .OK
+        return result
     }
     
     ///////////////////////////////////////////////////
     //// FUNCTION:  correct & save files
     ///////////////////////////////////////////////////
     func archiveDocsForURLs(URLs: [NSURL], rewrite: Bool) -> ErrorCode {
+    
+        var result = ErrorCode.OK
         
         let suffix = rewrite ? "" : newFileSuffix
         
         for file in URLs {
             
             if let tmpURL = NSURL(fileURLWithPath: "\(tempDir.path!)/\(file.lastPathComponent!)", isDirectory: true) {
+                
+                
+                if searchAndReplaceMode {
+                    textReplacementsCounter += searchAndReplaceTextAt(NSURL(fileURLWithPath: "\(tmpURL.path!)/content.xml")!, searchFor: [searchString!], replaceBy: [replaceString!])
+                }
                 
                 correctXMLErrorsAt(NSURL(fileURLWithPath: "\(tmpURL.path!)/content.xml")!)
                 
@@ -122,52 +148,59 @@ class FileManager: NSObject {
                 
                 self._launchTaskAt(zipPath, args: ["-r", "-X", destinationPath, "."], handler: { (error: ErrorCode, log: String) -> Void in
                     ErrorHandler.defaultHandler.printError(error)
-                    self.writeToLog(log)
-                    self.writeToLog(error.rawValue)
+                    
+                    if error == .OK {
+                        self.writeToLog("✅ SAVED file: \(destinationPath)")
+                    } else {
+                        self.writeToLog("🚫 \(error.rawValue)")
+                        self.writeToLog("🚫 \(log)")
+                    }
+                    
+                    result = error
                 })
             
             }
         }
         
         removeTempDir(tempDir)
-        return .OK
+        return result
     }
     
     ///////////////////////////////////////////////////////////
     //// FUNCTION:  Search & correct XML-errors in a content.xml
     ///////////////////////////////////////////////////////////
     func correctXMLErrorsAt(URL: NSURL) {
-        xmlErrorsFixed += searchForXMLErrorsAt(URL)
-        searchAndReplaceTextAt(URL, searchFor: possibleErrors, replaceBy: corrections)
+        xmlErrorsFixed += searchAndReplaceTextAt(URL, searchFor: possibleErrors, replaceBy: corrections)
         
     }
     
     ///////////////////////////////////////////////////
     //// FUNCTION:  Search & Replace text in a file
     ///////////////////////////////////////////////////
-    func searchAndReplaceTextAt(URL: NSURL, searchFor: [String], replaceBy: [String]) {
-        
-                            var fileOpenError:NSError?
-        
-                            if NSFileManager.defaultManager().fileExistsAtPath(URL.path!) {
-        
-                                if let fileContent = String(contentsOfURL: URL, encoding: NSUTF8StringEncoding, error: &fileOpenError) {
-                                    var text = fileContent
-                                    for index in 0 ... (searchFor.count - 1) {
-                                        
-                                        text = text.stringByReplacingOccurrencesOfString(searchFor[index], withString: replaceBy[index], options: .RegularExpressionSearch)
-                                    }
-                                    
-                                    text.writeToURL(URL, atomically: false, encoding: NSUTF8StringEncoding, error: &fileOpenError)
+    func searchAndReplaceTextAt(URL: NSURL, searchFor: [String], replaceBy: [String]) -> UInt {
+        var counter: UInt = 0
+        var fileOpenError:NSError?
 
-                                } else {
-                                    if let fileOpenError = fileOpenError {
-                                        writeToLog(fileOpenError.description)
-                                    }
-                                }
-                            } else {
-                                println("file not found")
-                            }
+        if NSFileManager.defaultManager().fileExistsAtPath(URL.path!) {
+
+            if let fileContent = String(contentsOfURL: URL, encoding: NSUTF8StringEncoding, error: &fileOpenError) {
+                var text = fileContent
+                for index in 0 ... (searchFor.count - 1) {
+                    counter += UInt(count(text.componentsSeparatedByString(searchFor[index])) - 1)
+                    text = text.stringByReplacingOccurrencesOfString(searchFor[index], withString: replaceBy[index], options: .RegularExpressionSearch)
+                }
+                
+                text.writeToURL(URL, atomically: false, encoding: NSUTF8StringEncoding, error: &fileOpenError)
+
+            } else {
+                if let fileOpenError = fileOpenError {
+                    writeToLog(fileOpenError.description)
+                }
+            }
+        } else {
+            println("file not found")
+        }
+        return counter
     }
     
     ///////////////////////////////////////////////////
