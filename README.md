@@ -7,4 +7,4 @@ ODTFix for Mac OS
 
 Утилита всё еще на стадии разработки, но, в целом, основной функционал работает (если не искать баги целенаправленно :) )
 
-[![](https://raw.github.com/Badzyo/ODTFix/Screenshot.png)]()
+[![](https://raw.githubusercontent.com/Badzyo/ODTFix/master/Screenshot.png)]()
