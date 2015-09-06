@@ -16,6 +16,7 @@
 		80ACBE201B8F838600A1E5DC /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE1F1B8F838600A1E5DC /* FileManager.swift */; };
 		80ACBE261B8FA20000A1E5DC /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */; };
 		80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D875251B9110B8005D4DE0 /* HelpViewController.swift */; };
+		80E949971B9C9F9A00950473 /* DragAndDropTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80E949961B9C9F9A00950473 /* DragAndDropTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		80ACBE1F1B8F838600A1E5DC /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		80D875251B9110B8005D4DE0 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		80E949961B9C9F9A00950473 /* DragAndDropTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragAndDropTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				8016B4D51B89AA850051CEA7 /* AppDelegate.swift */,
 				8016B4D71B89AA850051CEA7 /* ViewController.swift */,
 				8057A5A91B9C4E3600C034EE /* FileProcessingController.swift */,
+				80E949961B9C9F9A00950473 /* DragAndDropTextView.swift */,
 				80ACBE1F1B8F838600A1E5DC /* FileManager.swift */,
 				80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */,
 				80D875251B9110B8005D4DE0 /* HelpViewController.swift */,
@@ -225,6 +228,7 @@
 				8057A5AA1B9C4E3600C034EE /* FileProcessingController.swift in Sources */,
 				8016B4D81B89AA850051CEA7 /* ViewController.swift in Sources */,
 				8016B4D61B89AA850051CEA7 /* AppDelegate.swift in Sources */,
+				80E949971B9C9F9A00950473 /* DragAndDropTextView.swift in Sources */,
 				80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -20,6 +20,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
         
     }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {
+        return true
+    }
 
     func applicationWillTerminate(aNotification: NSNotification) {
         
