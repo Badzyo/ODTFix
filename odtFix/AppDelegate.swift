@@ -11,12 +11,18 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+    
+    @IBOutlet weak var openFilesMenuItem: NSMenuItem!
+    @IBOutlet weak var processFilesMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        
+
         FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
         
+    }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {
+        return true
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -24,6 +30,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
     }
     
+    @IBAction func openFilesMenuSelected(sender: NSMenuItem) {
+    
+    }
+    
+    @IBAction func processFilesMenuSelected(sender: NSMenuItem) {
+
+    }
+        
 
 }
 
