@@ -52,16 +52,14 @@
                             </menuItem>
                             <menuItem title="File" id="gQA-Oq-yYj">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="File" id="ZQk-lC-Zek">
+                                <menu key="submenu" title="File" autoenablesItems="NO" id="ZQk-lC-Zek">
                                     <items>
-                                        <menuItem title="Open" id="cQg-Iw-PsR">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Select Files" keyEquivalent="o" id="cQg-Iw-PsR">
                                             <connections>
                                                 <action selector="openFilesMenuSelected:" target="Voe-Tx-rLC" id="kxN-p9-fSz"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Process" enabled="NO" id="zkR-9K-eRc">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                        <menuItem title="Process" enabled="NO" keyEquivalent="p" id="zkR-9K-eRc">
                                             <connections>
                                                 <action selector="processFilesMenuSelected:" target="Voe-Tx-rLC" id="a2v-SC-4vT"/>
                                             </connections>
@@ -114,6 +112,7 @@
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="odtFix" customModuleProvider="target">
                     <connections>
+                        <outlet property="openFilesMenuItem" destination="cQg-Iw-PsR" id="AgA-GN-WDn"/>
                         <outlet property="processFilesMenuItem" destination="zkR-9K-eRc" id="Alu-NJ-4ee"/>
                     </connections>
                 </customObject>

@@ -11,11 +11,12 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+    
+    @IBOutlet weak var openFilesMenuItem: NSMenuItem!
     @IBOutlet weak var processFilesMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        
+
         FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
         
     }
@@ -26,13 +27,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func openFilesMenuSelected(sender: NSMenuItem) {
-        println("OPEN FILES")
-        processFilesMenuItem.enabled = true
+    
     }
     
     @IBAction func processFilesMenuSelected(sender: NSMenuItem) {
-        println("Process FILES")
-        processFilesMenuItem.enabled = false
+
     }
         
 

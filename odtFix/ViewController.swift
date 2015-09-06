@@ -11,11 +11,6 @@ import AppKit
 
 class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDelegate {
     
-//    // File processing modes
-//    enum Modes {
-//        case FixOnly
-//        case FixAndReplace
-//    }
     
     //States of UI object
     enum States {
@@ -23,16 +18,10 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
         case OFF
     }
     
+    weak var appDelegate = NSApplication.sharedApplication().delegate as? AppDelegate
+    
     let controller = FileProcessingController.sharedController
 
-//    let manager = FileManager.sharedManager
-//    
-//    var fileURLs: [NSURL]?
-//    
-//    var mode: Modes = .FixOnly
-//    
-//    var rewriteFiles = false
-    
     let RedColor = NSColor(red: 1, green: 0, blue: 0, alpha: 0.25)
     let WhiteColor = NSColor(red: 1, green: 1, blue: 1, alpha: 1)
 
@@ -81,10 +70,7 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
     ///////////////////////////////////////////////////
     @IBAction func openFiles(sender: NSButton) {
         
-        if controller.openFiles() == true {
-            resaveButton.enabled = true
-        }
-        
+        controller.openFiles()        
     }
     
     ///////////////////////////////////////////////////
@@ -92,6 +78,22 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
     ///////////////////////////////////////////////////
     @IBAction func fixXML(sender: NSButton) {
         
+        processFiles()
+        
+    }
+    
+    @IBAction func openFilesMenuSelected(sender: NSMenuItem) {
+        controller.openFiles()
+    }
+    
+    @IBAction func processFilesMenuSelected(sender: NSMenuItem) {
+        processFiles()
+    }
+    
+    ///////////////////////////////////////////////////
+    //// FUNCTION:  Process files
+    ///////////////////////////////////////////////////
+    func processFiles() {
         if controller.mode == .FixAndReplace && !_isEnteredTextForReplace() {
             writeToLog("🚫 Не введены строки для поиска и замены")
             if count(replaceTextField.stringValue) == 0 {
@@ -109,9 +111,6 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
             
             controller.fixXML()
         }
-        
-
-        
     }
     
     ///////////////////////////////////////////////////
@@ -150,9 +149,16 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
         }
     }
     
+    
+    @IBOutlet weak var openFilesMenuItem: NSMenuItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        appDelegate!.openFilesMenuItem.target = self
+        appDelegate!.processFilesMenuItem.target = self
         FileProcessingController.sharedController.delegate = self
+        FileProcessingController.sharedController.addObserver(self, forKeyPath: "isFileSelected", options: .New, context: nil)
         FileManager.sharedManager.delegate = self
         FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
         FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
@@ -169,6 +175,16 @@ class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDe
             case "textReplacementsCounter":
                 replacesCountLabel.stringValue = "\(theObject.textReplacementsCounter)"
             default: ()
+            }
+        } else {
+            if let theObject = object as? FileProcessingController {
+                switch keyPath {
+                case "isFileSelected":
+                    resaveButton.enabled = theObject.isFileSelected
+                    appDelegate!.processFilesMenuItem.enabled = theObject.isFileSelected
+                    appDelegate!.openFilesMenuItem.state = theObject.isFileSelected ? 1 : 0
+                default: ()
+                }
             }
         }
     }

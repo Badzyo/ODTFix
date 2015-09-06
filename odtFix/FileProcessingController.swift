@@ -23,6 +23,7 @@ protocol FileProcessingDelegate: class {
 }
 
 class FileProcessingController: NSObject {
+    
     static let sharedController = FileProcessingController()
     
     weak var delegate: FileProcessingDelegate?
@@ -35,12 +36,18 @@ class FileProcessingController: NSObject {
     
     var rewriteFiles = false
     
-   func openFiles() -> Bool {
+    dynamic var isFileSelected = false
+   
+    ///////////////////////////////////////////////////
+    //// FUNCTION:  Open files
+    ///////////////////////////////////////////////////
+    func openFiles() -> Bool {
         
         if let files = NSOpenPanel().selectFiles {
             if !(files.isEmpty) {
                 fileURLs = files
                 manager.unarchiveDocsFromURLs(fileURLs!)
+                isFileSelected = true
             } else {
                 println("file selection was canceled")
             }
@@ -56,11 +63,16 @@ class FileProcessingController: NSObject {
     
     }
     
+    
+    ///////////////////////////////////////////////////
+    //// FUNCTION:  Process files
+    ///////////////////////////////////////////////////
     func fixXML() {
         
         if let fileURLs = self.fileURLs {
             
             if !(fileURLs.isEmpty) {
+                isFileSelected = false
                 if mode == .FixAndReplace {
                     manager.searchAndReplaceMode = true
                     manager.searchString = delegate?.findTextField.stringValue
