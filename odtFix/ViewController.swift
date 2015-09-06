@@ -9,27 +9,29 @@
 import Cocoa
 import AppKit
 
-class ViewController: NSViewController, FileManagerLogDelegate {
+class ViewController: NSViewController, FileManagerLogDelegate, FileProcessingDelegate {
     
-    // File processing modes
-    enum Modes {
-        case FixOnly
-        case FixAndReplace
-    }
+//    // File processing modes
+//    enum Modes {
+//        case FixOnly
+//        case FixAndReplace
+//    }
     
     //States of UI object
     enum States {
         case ON
         case OFF
     }
+    
+    let controller = FileProcessingController.sharedController
 
-    let manager = FileManager.sharedManager
-    
-    var fileURLs: [NSURL]?
-    
-    var mode: Modes = .FixOnly
-    
-    var rewriteFiles = false
+//    let manager = FileManager.sharedManager
+//    
+//    var fileURLs: [NSURL]?
+//    
+//    var mode: Modes = .FixOnly
+//    
+//    var rewriteFiles = false
     
     let RedColor = NSColor(red: 1, green: 0, blue: 0, alpha: 0.25)
     let WhiteColor = NSColor(red: 1, green: 1, blue: 1, alpha: 1)
@@ -55,10 +57,10 @@ class ViewController: NSViewController, FileManagerLogDelegate {
         let radioRow = sender.selectedRow
         
         if radioRow == 1 {
-            mode = .FixAndReplace
+            controller.mode = .FixAndReplace
             _replacementTextFieldsChangeState(.ON)
         } else {
-            mode = .FixOnly
+            controller.mode = .FixOnly
             _replacementTextFieldsChangeState(.OFF)
         }
     }
@@ -68,9 +70,9 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     ///////////////////////////////////////////////////
     @IBAction func rewriteModeChanged(sender: NSButton) {
         if sender.state == 0 {
-            rewriteFiles = false
+            controller.rewriteFiles = false
         } else {
-            rewriteFiles = true
+            controller.rewriteFiles = true
         }
     }
     
@@ -79,18 +81,7 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     ///////////////////////////////////////////////////
     @IBAction func openFiles(sender: NSButton) {
         
-        if let files = NSOpenPanel().selectFiles {
-            if !(files.isEmpty) {
-                fileURLs = files
-                manager.unarchiveDocsFromURLs(fileURLs!)
-            } else {
-                            println("file selection was canceled")
-            }
-        } else {
-            println("file selection was canceled")
-        }
-        
-        if fileURLs?.count > 0 {
+        if controller.openFiles() == true {
             resaveButton.enabled = true
         }
         
@@ -101,7 +92,7 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     ///////////////////////////////////////////////////
     @IBAction func fixXML(sender: NSButton) {
         
-        if mode == .FixAndReplace && !_isEnteredTextForReplace() {
+        if controller.mode == .FixAndReplace && !_isEnteredTextForReplace() {
             writeToLog("🚫 Не введены строки для поиска и замены")
             if count(replaceTextField.stringValue) == 0 {
                 replaceTextField.backgroundColor = RedColor
@@ -116,21 +107,7 @@ class ViewController: NSViewController, FileManagerLogDelegate {
             findTextField.backgroundColor = WhiteColor
             resaveButton.enabled = false
             
-            if let fileURLs = self.fileURLs {
-
-                if !(fileURLs.isEmpty) {
-                    if mode == .FixAndReplace {
-                        manager.searchAndReplaceMode = true
-                        manager.searchString = findTextField.stringValue
-                        manager.replaceString = replaceTextField.stringValue
-                    }
-                    
-                    manager.archiveDocsForURLs(fileURLs, rewrite: rewriteFiles)
-                }
-
-            } else {
-                println("file not selected")
-            }
+            controller.fixXML()
         }
         
 
@@ -175,11 +152,11 @@ class ViewController: NSViewController, FileManagerLogDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        manager.delegate = self
-        manager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
-        manager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
-        manager.addObserver(self, forKeyPath: "textReplacementsCounter", options: .New, context: nil)
+        FileProcessingController.sharedController.delegate = self
+        FileManager.sharedManager.delegate = self
+        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsCounter", options: .New, context: nil)
+        FileManager.sharedManager.addObserver(self, forKeyPath: "xmlErrorsFixed", options: .New, context: nil)
+        FileManager.sharedManager.addObserver(self, forKeyPath: "textReplacementsCounter", options: .New, context: nil)
 
     }
     

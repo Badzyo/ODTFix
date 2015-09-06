@@ -12,6 +12,7 @@
 		8016B4DA1B89AA850051CEA7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8016B4D91B89AA850051CEA7 /* Images.xcassets */; };
 		8016B4DD1B89AA850051CEA7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8016B4DB1B89AA850051CEA7 /* Main.storyboard */; };
 		8016B4E91B89AA850051CEA7 /* odtFixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8016B4E81B89AA850051CEA7 /* odtFixTests.swift */; };
+		8057A5AA1B9C4E3600C034EE /* FileProcessingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8057A5A91B9C4E3600C034EE /* FileProcessingController.swift */; };
 		80ACBE201B8F838600A1E5DC /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE1F1B8F838600A1E5DC /* FileManager.swift */; };
 		80ACBE261B8FA20000A1E5DC /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */; };
 		80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D875251B9110B8005D4DE0 /* HelpViewController.swift */; };
@@ -37,6 +38,7 @@
 		8016B4E21B89AA850051CEA7 /* odtFixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = odtFixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8016B4E71B89AA850051CEA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8016B4E81B89AA850051CEA7 /* odtFixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = odtFixTests.swift; sourceTree = "<group>"; };
+		8057A5A91B9C4E3600C034EE /* FileProcessingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileProcessingController.swift; sourceTree = "<group>"; };
 		80ACBE1F1B8F838600A1E5DC /* FileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		80D875251B9110B8005D4DE0 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			children = (
 				8016B4D51B89AA850051CEA7 /* AppDelegate.swift */,
 				8016B4D71B89AA850051CEA7 /* ViewController.swift */,
+				8057A5A91B9C4E3600C034EE /* FileProcessingController.swift */,
 				80ACBE1F1B8F838600A1E5DC /* FileManager.swift */,
 				80ACBE251B8FA20000A1E5DC /* ErrorHandler.swift */,
 				80D875251B9110B8005D4DE0 /* HelpViewController.swift */,
@@ -219,6 +222,7 @@
 			files = (
 				80ACBE201B8F838600A1E5DC /* FileManager.swift in Sources */,
 				80ACBE261B8FA20000A1E5DC /* ErrorHandler.swift in Sources */,
+				8057A5AA1B9C4E3600C034EE /* FileProcessingController.swift in Sources */,
 				8016B4D81B89AA850051CEA7 /* ViewController.swift in Sources */,
 				8016B4D61B89AA850051CEA7 /* AppDelegate.swift in Sources */,
 				80D875261B9110B8005D4DE0 /* HelpViewController.swift in Sources */,

@@ -12,6 +12,7 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
 
+    @IBOutlet weak var processFilesMenuItem: NSMenuItem!
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
@@ -24,6 +25,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         FileManager.sharedManager.removeTempDir(FileManager.sharedManager.tempDir)
     }
     
+    @IBAction func openFilesMenuSelected(sender: NSMenuItem) {
+        println("OPEN FILES")
+        processFilesMenuItem.enabled = true
+    }
+    
+    @IBAction func processFilesMenuSelected(sender: NSMenuItem) {
+        println("Process FILES")
+        processFilesMenuItem.enabled = false
+    }
+        
 
 }
 

@@ -9,24 +9,29 @@
 import Foundation
 import Cocoa
 
-
 extension NSOpenPanel {
+    // runs NSOpenPanel and returns an [NSURL]
     var selectFiles: [NSURL]? {
         let fileOpenPanel = NSOpenPanel()
+        var openButtonPressed = false
+        fileOpenPanel.allowedFileTypes = ["odt", "ODT"]
         fileOpenPanel.title = "Select File(s)"
         fileOpenPanel.allowsMultipleSelection = true
         fileOpenPanel.canChooseDirectories = false
         fileOpenPanel.canChooseFiles = true
         fileOpenPanel.canCreateDirectories = false
-        fileOpenPanel.runModal()
-        if let URLs = fileOpenPanel.URLs as? [NSURL] {
-            return URLs
+        //If "Open" has being pressed
+        if fileOpenPanel.runModal() == NSFileHandlingPanelOKButton {
+            if let URLs = fileOpenPanel.URLs as? [NSURL] {
+                return URLs
+            }
         }
+        // if "Cancel" has being pressed
         return nil
     }
 }
 
-protocol FileManagerLogDelegate {
+protocol FileManagerLogDelegate: class {
     weak var textView: NSScrollView! { get }
 }
 
@@ -35,7 +40,7 @@ class FileManager: NSObject {
     
     static let sharedManager = FileManager()
     let tempDir = NSURL(fileURLWithPath: "/private/tmp/odtFix", isDirectory: true)!
-    var delegate: FileManagerLogDelegate?
+    weak var delegate: FileManagerLogDelegate?
     
     let zipPath = "/usr/bin/zip"
     let unzipPath = "/usr/bin/unzip"
